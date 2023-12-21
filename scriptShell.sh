@@ -6,14 +6,19 @@ mkdir -v image
 echo "-------------------------------------------------"
 echo "$a"
 
-case $2 in 
-  *-d1*) echo "d1";;  
-  *-d2*) echo "d2";;  
-  *-l*) echo "l";;
-  *-t*) echo "t";;
-  *-s*) echo "s";;
-  *) echo "traitement non valable";; 
-  esac
+case $1 in 
+"$1.csv")
+  case $2 in 
+    *-d1*) echo "d1";;  
+    *-d2*) echo "d2";;  
+    *-l*) echo "l";;
+    *-t*) echo "t";;
+    *-s*) echo "s";;
+    *) echo "traitement non valable";; 
+    esac;;
+*)
+  echo "veuillez mettre le csv en premier argument";;
+esac
 
 function aide {
   echo "lancez aide.sh si vous avez besoin d'aide"

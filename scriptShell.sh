@@ -10,7 +10,7 @@ case $1 in
   *.csv)
     case $2 in 
       *-d1*) 
-      cut -d';' -f1,6 data/data.csv | sort -n -r
+      cut -d';' -f1,6 data/data.csv | sort -f1 -n -r | head -10 | 
       echo "d1";;  
       *-d2*) echo "d2";;  
       *-l*) echo "l";;

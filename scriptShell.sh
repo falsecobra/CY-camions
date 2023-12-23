@@ -7,16 +7,18 @@ echo "-------------------------------------------------"
 echo "$a"
 
 case $1 in 
-"$1.csv")
-  case $2 in 
-    *-d1*) echo "d1";;  
-    *-d2*) echo "d2";;  
-    *-l*) echo "l";;
-    *-t*) echo "t";;
-    *-s*) echo "s";;
-    *) echo "traitement non valable";; 
-    esac;;
-*)
+  *.csv)
+    case $2 in 
+      *-d1*) 
+      cut -d';' -f1,6 data/data.csv | sort -n -r
+      echo "d1";;  
+      *-d2*) echo "d2";;  
+      *-l*) echo "l";;
+      *-t*) echo "t";;
+      *-s*) echo "s";;
+      *) echo "traitement non valable";;
+      esac;;
+  *)
   echo "veuillez mettre le csv en premier argument";;
 esac
 

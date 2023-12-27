@@ -1,0 +1,2 @@
+#ignore les .csv car ils sont trop lourd pour github
+*.csv

@@ -11,7 +11,8 @@ case $1 in # switch avec les differentes commandes
     case $2 in # trie en fonction du plus routes parcouru.
       *-d1*) 
       #cut -d';' -f 1,2,6 "$1" > temp/tempD1.txt
-      sort -t';' -k 6 | uniq -u "$1" | cut -d';' -f 6  | uniq -c > temp/tempNB.txt #prends les lignes unique, prends seulement la derniere colonne, la trie puis compte combien de fois il apparait.
+      cut -d';' -f1-5,6 "$1" | sort -u | cut -d';' -f6 | sort | uniq -c | sort -n -r | head -10 > temp/tempNB.txt
+#prends les lignes unique, prends seulement la derniere colonne, la trie puis compte combien de fois il apparait.
       #gcc -o temp/exeD1 progc/traitementD1.c
       #./temp/exeD1 temp/tempD1.txt
       sort -t ';' -k1,1 -n -r temp/tempNB.txt| head -10 > demo/resultat.txt
@@ -20,7 +21,7 @@ case $1 in # switch avec les differentes commandes
       *-l*) echo "l";;
       *-t*) echo "t";;
       *-s*) echo "s";;
-      *-h*) echo "-d2 : liste des 10 plus gros fichiers, -d1 : liste des 10 plus petits fichiers, -l : liste des fichiers par extension, -t : liste des fichiers par date, -s : liste des fichiers par taille, -h : aide" ;;
+      *-h*) echo "-d2 : conducteurs avec le plus de trajets, -d1 : conducteurs et la plus grande distance, -l : les 10 trajets les plus longs, -t : les 10 villes les plus traversées, -s : statistiques sur les étapes, -h : aide et informations sur les commandes" ;;
       *) echo "traitement non valable";; # par default
       esac;;
   *)

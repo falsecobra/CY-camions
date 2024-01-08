@@ -13,15 +13,12 @@ HEADERS = $(wildcard $(DIR_INC)*.h)
 main: $(SRCS) $(HEADERS)
 	$(CC) -o "$@" $(SRCS)	$(CFLAGS)
 
-traitementD1:
-
-traitementD2:
 
 traitementL:
 
-traitementS:
-
 traitementT:
+
+traitementS:
 
 clean:
 	rm -f main main-debug

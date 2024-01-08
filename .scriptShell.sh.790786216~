@@ -17,10 +17,7 @@ case $1 in # switch avec les differentes commandes
   *.csv)
     case $2 in # trie en fonction du plus routes parcouru.
       *-d1*) 
-      cut -d';' -f1,6 "$1" | sort -u | cut -d';' -f2 | sort | uniq -c | sort -n -r | head -10 > temp/tempNB.txt # cette ligne prends l'id trajet et le nom des conducteurs [cut] pour les trier une premiere fois. 
-      #[sort -u] et ce tout en supprimant les lignes en double afin de ne pas compter deux fois les conducteurs ayant fais le meme trajet.
-      #ensuite on prends seulement la colonne des conducteurs [cut] et on les retrie [sort]
-      #[uniq -c] permet de compter le nombre de repetetition, on trie du plus grand au plus petit [sort] puis on envoie les 10 premieres lignes [head] dans un fichier temporaire nommée tempNB.txt
+      cut -d';' -f1,6 "$1" | sort -u | cut -d';' -f2 | sort | uniq -c | sort -n -r | head -10 > temp/tempNB.txt # cette ligne prends l'id trajet et le nom des conducteurs pour les trier une premiere fois. Ensuite, nicolas le caca
       echo "traitement d1 effectué";;
       *-d2*) echo "d2";;
       *-l*) echo "l";;

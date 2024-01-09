@@ -54,7 +54,7 @@ echo "
 - - - - - - Fin de programme - - - - - -
 "
 echo " temps de traitement : NULL"
-
+#rajouter les rm apres le push git
 #compile et lance main.c ( sans arguments, a modifier si possible)
 gcc -o temp/exe progc/main.c
 ./temp/exe

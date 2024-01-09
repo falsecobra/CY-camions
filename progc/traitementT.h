@@ -1,59 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
+
 #include <string.h> //pour comparer les noms de villes
 
 // j'ai copié puis collé ci dessous les méthodes du td avl en les modifiant adéquatement
 
 typedef struct avl {
-  int val;
+  char vil[45];
+  int nbvis;
   struct avl *fg;
   struct avl *fd;
   int equi;
 } avl;
 
-int min(int liste[]) {
-}
+void colonnecut (int n,char colonne[100],char ligne[300]);//équivalent de la commande cut mais en c
 
-int max(int liste[]) {
-  
-}
+int min(int liste[]) ;
 
-avl *creerarbre(int nb) {
-  
-}
+void indiceminpt(avl* liste[10],int*m);
+void minpt (avl* liste[10],avl* a);
 
-avl *RotationGauche(avl *a) {
- 
-}
 
-avl *RotationDroite(avl *a) {
-  
-}
+int max(int liste[]) ;
 
-avl *DoubleRotationGauche(avl *a) {
-  a->fd = RotationDroite(a->fd);
-  a = RotationGauche(a);
-  return a;
-}
 
-avl *DoubleRotationDroite(avl *a) {
-  
-}
+avl *creerarbre(char v[45]) ;
 
-void afficher(avl *a) {
-  
-}
-void afficherinf(avl *a) {
-  
-}
+avl *RotationGauche(avl *a) ;
 
-avl *equilibrer(avl *a) {
-  
-}
+avl *RotationDroite(avl *a) ;
 
-avl *insertion(avl *a, int nb, int *h) {
-  
-    
-}
+avl *DoubleRotationGauche(avl *a) ;
+
+avl *DoubleRotationDroite(avl *a);
+void afficher(avl *a) ;
+void afficherinf(avl *a) ;
+
+avl *equilibrer(avl *a) ;
+
+avl *insertion(avl *a, char v[45], int *h,avl* liste[10],int*m) ;
+
+void affichept(avl* liste[10]);
 

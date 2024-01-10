@@ -10,7 +10,6 @@
 typedef struct avl {
   char vil[45];
   int nbvis;
-  int nbdepart;
   struct avl *fg;
   struct avl *fd;
   int equi;
@@ -20,11 +19,9 @@ void colonnecut (int n,char colonne[100],char ligne[300]);//équivalent de la co
 
 int min(int liste[]) ;
 
-void affichestr(char liste[10][45]);
-
 void indiceminpt(avl* liste[10],int*m);
-void remplacept (avl* liste[10],avl* a,int*m);
-void tript(avl*liste[10],char chmodif[10][45]);
+void minpt (avl* liste[10],avl* a);
+
 
 int max(int liste[]) ;
 
@@ -43,11 +40,7 @@ void afficherinf(avl *a) ;
 
 avl *equilibrer(avl *a) ;
 
-int recherche(avl *a, char v[45],avl **t);
-
 avl *insertion(avl *a, char v[45], int *h,avl* liste[10],int*m) ;
-
-
 
 void affichept(avl* liste[10]);
 

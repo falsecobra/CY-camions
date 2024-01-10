@@ -353,7 +353,7 @@ int main(int argc, char *argv[]){
 
   time_t debut, fin; 
   time(&debut);//démarre le chrono
-  char villeinit[45]={"kville imaginaire "};
+  char villeinit[45]={"KAAAAAAAAAAA"};
   avl* av= creerarbre(villeinit);
   
   
@@ -365,7 +365,10 @@ int main(int argc, char *argv[]){
   //printf("%s %s %s\n",ligne,stepid,av->vil);}
   //char andi[45]={"ANDILLY"};
   //int comptandi=0;
-  
+  else {
+    printf("erreur lecture fichier");
+      exit(6);
+  }
   while (fgets(ligne, 300, data)!=NULL){//parcours tout le fichier
     colonnecut (1,stepid,ligne);
     colonnecut (3,villeb,ligne);
@@ -404,6 +407,6 @@ int main(int argc, char *argv[]){
   //printf("%d\n" ,comptandi);
 
   time (&fin);//éteint le chrono
-    printf("\nTraitement D1 effectué en %f secondes !\n",difftime(fin,debut));
+    printf("\nTraitement T effectué en %f secondes !\n",difftime(fin,debut));
   return 0;
 }

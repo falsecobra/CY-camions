@@ -32,7 +32,8 @@ case $1 in # switch avec les differentes commandes
       #additionner les km
       sort -n -r | head -10 > temp/tempNB.txt
       echo "d2";;
-      *-l*) cut -d',' -f6 "$1" | sort | uniq -c | sort -n -r > temp/tempNB.txt;;
+      *-l*) echo "l"
+      cut -d';' -f6 "$1" | sort -d | uniq -c | sort -n -r |>temp/tempNB.txt;;
       *-t*) echo "t";;
       *-s*) echo "s";;
       *-h*) echo "

@@ -12,6 +12,7 @@ On déclare un AVL à partir du fichier du tri où les noeuds sont une structure
 noeud {
 -str vil (nom de la ville)
 -int nbvis (nb de visites)
+-int nbdepart(nombre de depart de trajet depuis cette ville )
 -noeud* fg
 -noeud* fd
 -entier equi}
@@ -19,7 +20,7 @@ noeud {
 On va initialiser une liste de 10 pointeurs vers noeuds qui seront dirigés vers 
 les 10 villes dont l'attribut nboc est le plus élévé , cette liste sera actualisée au fil de l'insertion.
 
-Remplissage de l'AVL par nom de ville triée selon l'ordre alphabétique ,pour le problème de doublons arrivée-départ d'étapes successives, on ne s'occupera que les villes d'arrivées sauf si le champ step_id vaut 1 (car la ville d'origine ne sera dans aucune case de ville d'arrivée )
+Remplissage de l'AVL par nom de ville triée selon l'ordre alphabétique ,pour le problème de doublons arrivée-départ d'étapes successives, on ne s'occupera que des villes d'arrivées sauf si le champ step_id vaut 1 (car la ville d'origine ne sera dans aucune case de ville d'arrivée )
 
 
 
@@ -93,30 +94,61 @@ void indiceminpt(avl* liste[10],int*m){//met la valeur de nbvis du pt avec l'att
   }  }
 }
 
-void minpt (avl* liste[10],avl* a){//remplace la ville ayant la valeur minimale des nombres de visites parmis la liste de pointeurs par la ville passée en parametre 
-  avl* min=NULL;
-  if (liste[0]!=NULL){
-    min = liste[0];
-  }
+void remplacept (avl* liste[10],avl* a,int *m){//remplace la ville ayant la valeur minimale des nombres de visites parmis la liste de pointeurs par la ville passée en parametre 
 
-  
-  for (int i =0; i<10;i++){
-    if  (liste[i]==NULL){//cas de début ou il n'y a pas encore assez de villes
-      liste[i]=a;
+
+  if (*m<0){//liste pas pleinement remplie
+    for (int i =0; i<10;i++){
+
+      if  (liste[i]==NULL){//cas de début ou il n'y a pas encore assez de trajet
+        if (liste[i]==a){//le trajet est deja dans la liste
+          return;
+        }
+        liste[i]=a;
+      if (i==9){// la liste va se remplir :)
+        indiceminpt(liste,m);
+      }
+
+
       return;
     }
-    else{
-      if (liste[i]->nbvis<min->nbvis){
-        min = liste[i];   
-      }}
-      
-    }
-  if (a->nbvis > min->nbvis){// "a" a eu plus de visites que la moins visitée des 10 villes
-    min = a;
-    
+
+    }}
+  else {
+    for (int i =0; i<10;i++){// la liste est deja remplie
+  if (liste[i]==a){//le trajet est deja dans la liste
+    indiceminpt(liste,m);
+    return;
+  }}
+  for (int i =0; i<10;i++){
+  if (liste[i]->nbvis==*m){// on trouve l'abscisse du minimum
+    liste[i]=a;
+    indiceminpt(liste,m);
+    return;}}}}
+  /*ANCIENNE VERSION :
+  for (int i =0; i<10;i++){
+  if  (liste[i]==NULL){//cas de début ou il n'y a pas encore assez de villes
+    liste[i]=a;
+    indiceminpt(liste,m);
+    return;
   }
-  return;
-}
+  else if (liste[i]==a){// la ville est deja dans la liste
+    return;
+  }}
+  
+  if (a->nbvis>*m){//il doit y avoir un changement
+    for (int i =0; i<10;i++){
+      if (liste[i]->nbvis==*m){// on trouve l'abscisse du minimum
+        liste[i]=a;
+        indiceminpt(liste,m);
+        return;
+      }
+      }
+  }
+}*/
+
+
+  
 
 int max(int liste[]) {
   int maxi = liste[0];
@@ -128,10 +160,44 @@ int max(int liste[]) {
   return maxi;
 }
 
+void tript(avl*liste[10],char chmodif[10][45]){//renvoie la liste triée par ordre alphabétique avec un algorithme très suboptimal mais pour 10 elements ça ira
+  
+  
+  
+  
+  for (int i=0; i<10; i++){
+    int copy=i;
+
+    avl * va= liste[i];//fonctionne comme min temporaire
+    for (int y=i; y<10; y++)
+    {//on trouve la ville la plus avancée on la met en indice I
+      
+      
+    if(strcmp (liste[y]->vil ,va->vil)<0){//liste y avant va
+      va = liste[y];
+      copy=y;
+    }
+    }
+    avl*copie = liste[i];
+    liste[i]=va;
+    liste[copy]= copie;
+    
+    
+  }
+  
+  for (int z=0; z<10;z++){
+  strcpy(chmodif[z],liste[z]->vil);
+  }
+  
+
+  
+}
+
 avl *creerarbre(char v[45]) {
   avl *noeud = malloc(sizeof(avl));
   strcpy (noeud->vil, v);
   noeud->nbvis = 1;
+  noeud->nbdepart=0;
   noeud->fg = NULL;
   noeud->fd = NULL;
   noeud->equi = 0;
@@ -216,15 +282,40 @@ avl *equilibrer(avl *a) {
   return a;
 }
 
+int recherche(avl *a, char v[45],avl**t) { // renvoie 1 si nb existe dans l'avl t vaudra l'arbre,0sinon 
+  
+  if ( strcmp ( a->vil , v )==0) {
+    *t=a;
+    return 1;
+  } else if (strcmp ( a->vil , v )<0) {
+    if (a->fd == NULL) {
+      return 0;
+    } else {
+      return recherche(a->fd, v,t);
+    }
+  } else {
+    if (a->fg == NULL) {
+      return 0;
+    } else {
+      return recherche(a->fg, v,t);
+    }
+  }
+}
+
+
 avl *insertion(avl *a, char v[45], int *h,avl*liste[10],int*m) {
   if (a == NULL) {
     *h = 1;
-    return creerarbre(v);
+    avl * apr=creerarbre(v);
+    if (apr->nbvis>*m){
+      remplacept(liste,apr,m);
+    }
+    return apr;
   } else if ( strcmp ( a->vil , v )==0)  {//cas du doublon
-    a->nbvis+=1;//la ville est visité une fois de plus
+    a->nbvis+=1;//la ville est visitée une fois de plus
     if (a->nbvis>*m){
-      minpt(liste,a);
-      indiceminpt(liste,m);
+      remplacept(liste,a,m);
+      
     }
 
     *h = 0;
@@ -255,13 +346,22 @@ void affichept(avl* liste[10]){//fonction d'aide spectatrice
   printf("\nListe des pointeurs :\n");
   for (int i=0; i<10; i++){
     if (liste[i]!=NULL){
-    printf("%s %d\n",liste[i]->vil,liste[i]->nbvis);}
+    printf("%s %d %d\n",liste[i]->vil,liste[i]->nbvis ,liste[i]->nbdepart);}
+  }     
+}
+
+void affichestr(char liste[10][45]){//fonction d'aide spectatrice
+  printf("\nListe des VIlles  :\n");
+  for (int i=0; i<10; i++){
+    if (liste[i]!=NULL){
+    printf("%s \n",liste[i]);}
   }     
 }
 
 int main(int argc, char *argv[]){
   int hpt=0;
-  int minima = 1;
+  int minima = -1;
+  avl* trouve=NULL;// recherche
   int* m = &minima;  //pour la liste des pointeurs
   int* h = &hpt;  //pour l'insertion
   avl* listept[10]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};//liste de spointeurs
@@ -290,7 +390,7 @@ int main(int argc, char *argv[]){
 
   time_t debut, fin; 
   time(&debut);//démarre le chrono
-  char villeinit[45]={"kville imaginaire "};
+  char villeinit[45]={"KAAAAAAAAAAA"};
   avl* av= creerarbre(villeinit);
   
   
@@ -298,38 +398,52 @@ int main(int argc, char *argv[]){
   char stepid[100];//colonne n°1
   char villeb[100];//colonne 3
   char villea[100];//colonne 2
-  if(fgets(ligne, 300, data)!=NULL){//affiche la 1ere ligne
-
-  colonnecut (1,stepid,ligne);//on ignore la 1ere ligne
-  printf("%s %s %s\n",ligne,stepid,av->vil);}
-
-
+  if(fgets(ligne, 300, data)!=NULL){}//on ignore la 1ere ligne
+  //printf("%s %s %s\n",ligne,stepid,av->vil);}
+  //char andi[45]={"ANDILLY"};
+  //int comptandi=0;
+  else {
+    printf("erreur lecture fichier");
+      exit(6);
+  }
   while (fgets(ligne, 300, data)!=NULL){//parcours tout le fichier
     colonnecut (1,stepid,ligne);
     colonnecut (3,villeb,ligne);
-    av= insertion(av,villeb,h,listept,m);//on ajoute toutes les villes de fin d'étape
+    //if( strcmp ( andi , villeb )==0){
+      //comptandi+=1;
+    //}
+    
+    av= insertion(av,villeb,h,listept,m);//on ajoute toutes les villes de fin d'étape 
+    
     
     if ((stepid[0]=='1')&&(stepid[1]=='\0')) {//cas step id =1
+      
       colonnecut (2,villea,ligne); 
-      av= insertion(av,villea,h,listept,m);//on ajoute  la ville de debut d'étape seulement si c'est la première étape du trajet
-    }
+      //avl* trouve=NULL;
+      if (recherche(av, villea,&trouve)){// la ville existe deja donc on augmente nb depart
+        trouve->nbdepart+=1;
+      }
+      else{
+      av= insertion(av,villea,h,listept,m);//on ajoute  la ville puis on la retrouve : on met son nbdepart à 1 et nbvis à 0;
+      recherche(av, villea,&trouve);
+        trouve->nbdepart=1;
+        trouve->nbvis=0;
+    }}
   }
-  char caca[45]={"caca prout"};
-  avl* atest= creerarbre(caca);
-  atest->nbvis =56;
-  
-  
-  afficherinf(av);
-  minpt (listept,atest);
-  printf("\n bool %d\n",(atest->nbvis>*m));
-  affichept(listept);
-  indiceminpt(listept,m);
-  printf("indice min %d  %d\n",*m,atest->nbvis);
-  
+
   
   
 
+  affichept(listept);
+
+
+  
+  char retour [10][45];
+ tript(listept,retour);
+  affichestr(retour);
+  //printf("%d\n" ,comptandi);
+
   time (&fin);//éteint le chrono
-    printf("\nTraitement D1 effectué en %f secondes !\n",difftime(fin,debut));
+    printf("\nTraitement T effectué en %f secondes !\n",difftime(fin,debut));
   return 0;
 }

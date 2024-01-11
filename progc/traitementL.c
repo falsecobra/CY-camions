@@ -1,15 +1,16 @@
-#include "traitementS.h"
+// globablement un casi recopiage de traitementS
+#include "traitementL.h"
 
-/* ALGORITHME assez similaire au traitementH On trie tout d'abord  via avl par numero de trajet avec differents attributs distancemin distancemax et disance moyenne quie seront modifiées à chaque insertion
+/* ALGORITHME assez similaire au traitementS On trie tout d'abord  via avl par numero de trajet avecl'attribut distance qui sera incrémenté à chaque insertion
 
-on etablit une liste de 50 pointeurs vers les plus grandes valeurs (distancemax-distancemin) */
+on etablit une liste de 10 pointeurs vers les elements dotés des plus grandes valeurs distances */
 
 
 
 
 // une fonction tri fusion trouvée sur internet modifiée pour fonctionner avec des flottants elle servira pour la liste de pointeurs
 
-void triFusion(int i, int j, avl* tab[50], avl* tmp[50]) {//tab  estcelui a trier
+void triFusion(int i, int j, avl* tab[10], avl* tmp[10]) {//tab  estcelui a trier
     if(j <= i){ return;}
 
     int m = (i + j) / 2;
@@ -27,7 +28,7 @@ void triFusion(int i, int j, avl* tab[50], avl* tmp[50]) {//tab  estcelui a trie
         }else if (pd == j + 1) { //le pointeur du sous-tableau de droite a atteint la limite
             tmp[c] = tab[pg];
             pg++;
-        }else if (tab[pg]->dif > tab[pd]->dif) { //le pointeur du sous-tableau de gauche pointe vers un élément plus petit
+        }else if (tab[pg]->val < tab[pd]->val) { //le pointeur du sous-tableau de gauche pointe vers un élément plus petit
             tmp[c] = tab[pg];
             pg++;
         }else {  //le pointeur du sous-tableau de droite pointe vers un élément plus petit
@@ -71,74 +72,72 @@ void colonnemauvais (int n,char colonne[100],char ligne[300])//équivalent de la
   return;
 }
 
-void indiceminpt(avl* liste[50],float*m){//met la valeur de dif du pt avec l'attribut dif le plus bas dans m
+void indiceminpt(avl* liste[10],long double*m){//met la valeur de dif du pt avec l'attribut dif le plus bas dans m
   // IMPORTANT NE PAS UTILISER AVEC UNE LISTE PARTIELLEMENT REMPLIE
   //if (liste[0]!=NULL){
-  *m = liste[0]->dif;
-  for (int i = 1; i < 50; i++) {
-    
+  *m = liste[0]->distance;
+  for (int i = 1; i < 10; i++) {
 
-    if (liste[i]->dif< *m) {
-      *m = liste[i]->dif;
+
+    if (liste[i]->distance< *m) {
+      *m = liste[i]->distance;
     }
   }  
 }
 
-void remplacept (avl* liste[50],avl* a,float *m){//remplace le trajet ayant la valeur minimale de différences parmis la liste de pointeurs par le trajet passé en paramètre 
+void remplacept (avl* liste[10],avl* a,long double *m){//remplace le trajet ayant la valeur minimale de différences parmis la liste de pointeurs par le trajet passé en paramètre 
   //APPELER CETTE FONCVTION SSI A->dif >*m
 
   if (*m<0){//liste pas pleinement remplie
-  for (int i =0; i<50;i++){
-    
+  for (int i =0; i<10;i++){
+
     if  (liste[i]==NULL){//cas de début ou il n'y a pas encore assez de trajet
       if (liste[i]==a){//le trajet est deja dans la liste
         return;
       }
       liste[i]=a;
-    if (i==49){// la liste va se remplir :)
+    if (i==9){// la liste va se remplir :)
       indiceminpt(liste,m);
     }
-    
-    
+
+
     return;
   }
-    
+
   }}
   else {
-    for (int i =0; i<50;i++){// la liste est deja remplie
+    for (int i =0; i<10;i++){// la liste est deja remplie
   if (liste[i]==a){//le trajet est deja dans la liste
     indiceminpt(liste,m);
     return;
   }}
-  for (int i =0; i<50;i++){
-  if (liste[i]->dif==*m){// on trouve l'abscisse du minimum
+  for (int i =0; i<10;i++){
+  if (liste[i]->distance==*m){// on trouve l'abscisse du minimum
     liste[i]=a;
     indiceminpt(liste,m);
     return;}}}}
 
 void colonnecutul(int n,unsigned long int* pt,char ligne[300]){//comme colonnemauvais mais pour les entiers long
   unsigned long int essai;
-  
+
   char colonnet[100];
   colonnemauvais(n,colonnet,ligne);
-  if (colonnet[0]=='\n'){
-    printf("bug %c\n",colonnet[0]);
-  }
   
+
   char* end;
  essai= strtoul(colonnet, &end, 0);
   if(end==colonnet){
-    
+
     printf("champ invalide fonction colonnecutul");
-    
+
     exit (5);
   }
   *pt=essai;
 
 }
 
-void colonnecutf(int n,float* pt,char ligne[300]){//comme colonnecutul mais pour les reels
-  float essai;
+void colonnecutf(int n,long double * pt,char ligne[300]){//comme colonnecutul mais pour les reels
+  long double  essai;
   char colonnet[100];
   colonnemauvais(n,colonnet,ligne);
   char* end;
@@ -174,14 +173,10 @@ int max(int liste[]) {
   return maxi;
 }
 
-avl *creerarbre(unsigned long int nb,float d) {
+avl *creerarbre(unsigned long int nb,long double d) {
   avl *noeud = malloc(sizeof(avl));
   noeud->val = nb;
-  noeud->distancemax=d;
-  noeud->distancemin=d;
-  noeud->distancemoy=d;
-  noeud->nboccu=1;
-  noeud->dif=0;
+  noeud->distance=d;
   noeud->fg = NULL;
   noeud->fd = NULL;
   noeud->equi = 0;
@@ -236,7 +231,7 @@ void afficherinf(avl *a) {
     return;
   }
   afficherinf(a->fg);
-  printf("trajet %lu, distancemax %f, distancemin %f, distancemoy %f\n", a->val,a->distancemax,a->distancemin, a->distancemoy);
+  printf("trajet %lu, distance %Lf", a->val,a->distance);
   afficherinf(a->fd);
   return;
 }
@@ -278,28 +273,21 @@ int recherche(avl *a, unsigned long int nb) { // renvoie 1 si nb existe dans l'a
 
 
 
-avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],float distance,float* m) {
+avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],long double distance,long double * m) {
   if (a == NULL) {
     *h = 1;
     avl * apr=creerarbre(nb,distance);
-    if (apr->dif>*m){
+    if (apr->distance>*m){
       remplacept(liste,apr,m);
     }
     return apr;
   } else if (a->val == nb) {//le trajet est d'ores et déjà dans l'arbre
-    a->distancemoy=((a->distancemoy*a->nboccu)+distance)/((a->nboccu)+1);//actualise la moyenne
-    a->nboccu+=1;//on augmente son nombre d'occurences
-    if(a->distancemax<distance){//eventuelle modification de la distance max
-      a->distancemax=distance;
-    }
-    if(a->distancemin>distance){//eventuelle modification de la distance max
-      a->distancemin=distance;
-    }
-    a->dif=(a->distancemax)-(a->distancemin);
-    if (a->dif>*m){
+    a->distance=(a->distance)+(distance);//actualise la distance
+    
+    if (a->distance>*m){
       remplacept(liste,a,m);
     }
-    
+
     *h = 0;
     return a;
   } else if (a->val > nb) {
@@ -324,11 +312,11 @@ avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],float distance
   return a;
 }
 
-void affichept(avl* liste[50]){//fonction d'aide spectatrice
+void affichept(avl* liste[10]){//fonction d'aide spectatrice
   printf("\nListe des pointeurs :\n");
-  for (int i=0; i<50; i++){
+  for (int i=0; i<10; i++){
     if (liste[i]!=NULL){
-    printf("%lu %f %f %f %f\n",liste[i]->val,liste[i]->distancemax ,liste[i]->distancemin,liste[i]->distancemoy,liste[i]->dif);}
+    printf("%lu %Lf \n",liste[i]->val,liste[i]->distance);}
   }     
 }
 
@@ -342,22 +330,14 @@ void affichept(avl* liste[50]){//fonction d'aide spectatrice
 int main(int argc, char *argv[]){
   int hpt=0;
   unsigned long int lupt=0;
-  float fpt=0;
-  float minima = -1.0;//vaudra une valeur postive quand la liste sera rempli
+  long double fpt=0;
+  long double minima = -1.0;//vaudra une valeur postive quand la liste sera remplie
   avl* trouve=NULL;// recherche
-  float* m = &minima;  //pour la liste des pointeurs
+  long double* m = &minima;  //pour la liste des pointeurs
   int* h = &hpt;  //pour l'insertion
-  avl* listept[50]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,};//liste des pointeurs
+  avl* listept[10]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};//liste des pointeurs
 
-  avl* listept2[50]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-  NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-  NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-  NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-  NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,};//liste des pointeurs2 pr tri
+  avl* listept2[10]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};//liste des pointeurs2 pr tri
 
 
 
@@ -393,14 +373,14 @@ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,};//liste des pointeurs
       exit(6);
   }
 unsigned long int cligne =1;
-  
+
   while (fgets(ligne, 300, data)!=NULL){//parcours tout le fichier
     cligne+=1;
     if (strlen(ligne)>10){//comparaison arbitraire qui evite un bug
     colonnecutul (0,&lupt,ligne);//ne prend que le numero de trajet
     colonnecutf (4,&fpt,ligne);//prend la distance
-    
-    
+
+
 
     av= insertion(av,lupt,h,listept,fpt,m);//on ajoute tout la fonction modifie toutes les valeurs comme il faut
     }
@@ -409,17 +389,17 @@ unsigned long int cligne =1;
 
 
 
-  affichept(listept);
-  triFusion (0,49,listept,listept2);
+  affichept(listept2);
+  triFusion (0,9,listept,listept2);
   printf("\n");
   affichept(listept);
-  printf("%f",*m);
+  printf("%Lf",*m);
 
 
 
-  
 
-  
+
+
   time (&fin);//éteint le chrono
     printf("\nTraitement S effectué en %f secondes !\n",difftime(fin,debut));
   return 0;

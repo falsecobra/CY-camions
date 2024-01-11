@@ -95,6 +95,37 @@ void indiceminpt(avl* liste[10],int*m){//met la valeur de nbvis du pt avec l'att
 }
 
 void remplacept (avl* liste[10],avl* a,int *m){//remplace la ville ayant la valeur minimale des nombres de visites parmis la liste de pointeurs par la ville passée en parametre 
+
+
+  if (*m<0){//liste pas pleinement remplie
+    for (int i =0; i<10;i++){
+
+      if  (liste[i]==NULL){//cas de début ou il n'y a pas encore assez de trajet
+        if (liste[i]==a){//le trajet est deja dans la liste
+          return;
+        }
+        liste[i]=a;
+      if (i==9){// la liste va se remplir :)
+        indiceminpt(liste,m);
+      }
+
+
+      return;
+    }
+
+    }}
+  else {
+    for (int i =0; i<10;i++){// la liste est deja remplie
+  if (liste[i]==a){//le trajet est deja dans la liste
+    indiceminpt(liste,m);
+    return;
+  }}
+  for (int i =0; i<10;i++){
+  if (liste[i]->nbvis==*m){// on trouve l'abscisse du minimum
+    liste[i]=a;
+    indiceminpt(liste,m);
+    return;}}}}
+  /*ANCIENNE VERSION :
   for (int i =0; i<10;i++){
   if  (liste[i]==NULL){//cas de début ou il n'y a pas encore assez de villes
     liste[i]=a;
@@ -114,7 +145,10 @@ void remplacept (avl* liste[10],avl* a,int *m){//remplace la ville ayant la vale
       }
       }
   }
-}
+}*/
+
+
+  
 
 int max(int liste[]) {
   int maxi = liste[0];
@@ -272,10 +306,13 @@ int recherche(avl *a, char v[45],avl**t) { // renvoie 1 si nb existe dans l'avl 
 avl *insertion(avl *a, char v[45], int *h,avl*liste[10],int*m) {
   if (a == NULL) {
     *h = 1;
-    return creerarbre(v);
+    avl * apr=creerarbre(v);
+    if (apr->nbvis>*m){
+      remplacept(liste,apr,m);
+    }
+    return apr;
   } else if ( strcmp ( a->vil , v )==0)  {//cas du doublon
     a->nbvis+=1;//la ville est visitée une fois de plus
-    indiceminpt(liste,m);//ligne pas optimale mais juste pour etre certain
     if (a->nbvis>*m){
       remplacept(liste,a,m);
       
@@ -323,7 +360,7 @@ void affichestr(char liste[10][45]){//fonction d'aide spectatrice
 
 int main(int argc, char *argv[]){
   int hpt=0;
-  int minima = 1;
+  int minima = -1;
   avl* trouve=NULL;// recherche
   int* m = &minima;  //pour la liste des pointeurs
   int* h = &hpt;  //pour l'insertion

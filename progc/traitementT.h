@@ -10,6 +10,7 @@
 typedef struct avl {
   char vil[45];
   int nbvis;
+  int nbdepart;
   struct avl *fg;
   struct avl *fd;
   int equi;

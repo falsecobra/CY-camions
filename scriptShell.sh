@@ -1,5 +1,20 @@
 #!/bash/bin
 #verifie + crée si non existant les fichiers temp et image
+function traitementc {
+ echo "traitement en c"
+}
+function aide {
+  echo "/!\ PAS DE TRAITEMENT /!\ [AIDE] :
+  Ce programmme permet de faire différent traitement sur votre base de donnée. Le premier argument doit être un fichier csv et le deuxième un des différents traitements disponible : "
+  echo "-d2 : conducteurs avec le plus de trajets."
+  echo "-d1 : conducteurs et la plus grande distance."
+  echo "-l :les 10 trajets les plus long."
+  echo "-t : les 10 villes les plus traversées."
+  echo "-s : statistiques sur les étapes."
+  echo "-h : aide et informations sur les commandes."
+  echo "--------------------------------------"
+  echo "votre commande devrait etre de forme [bash scriptShell.sh votrefichier.csv -traitement]"
+}
 echo "
 - - - - - - Mise en place - - - - - - -
 "
@@ -22,32 +37,24 @@ case $1 in # switch avec les differentes commandes
   *.csv)
     case $2 in # trie en fonction du plus routes parcouru.
       *-d1*) 
-      cut -d';' -f1,6 "$1" | sort -u | cut -d';' -f2 | sort | uniq -c | sort -n -r | head -10 > temp/tempNB.txt # cette ligne prends l'id trajet et le nom des conducteurs [cut] pour les trier une premiere fois. 
+      cut -d';' -f1,6 "$1" | sort -u | cut -d';' -f2 | sort | uniq -c | sort -n -r | head -10 > demo/tempNB.txt # cette ligne prends l'id trajet et le nom des conducteurs [cut] pour les trier une premiere fois. 
       #[sort -u] et ce tout en supprimant les lignes en double afin de ne pas compter deux fois les conducteurs ayant fais le meme trajet.
       #ensuite on prends seulement la colonne des conducteurs [cut] et on les retrie [sort]
       #[uniq -c] permet de compter le nombre de repetetition, on trie du plus grand au plus petit [sort] puis on envoie les 10 premieres lignes [head] dans un fichier temporaire nommée tempNB.txt
       echo "traitement d1 effectué";;
       *-d2*) 
-      cut -d';' -f5,6 "$1" 
-      #additionner les km
-      sort -n -r | head -10 > temp/tempNB.txt
-      echo "d2";;
-      *-l*) cut -d',' -f6 "$1" | sort | uniq -c | sort -n -r > temp/tempNB.txt;;
-      *-t*) echo "t";;
-      *-s*) echo "s";;
-      *-h*) echo "
-      Ce programmme permet de faire différent traitement sur votre base de donnée. Le premier argument doit être un fichier csv et le deuxième un des différents traitements disponible : 
-      -d2 : conducteurs avec le plus de trajets.
-      -d1 : conducteurs et la plus grande distance.
-      -l :les 10 trajets les plus long.
-      -t : les 10 villes les plus traversées.
-      -s : statistiques sur les étapes.
-      -h : aide et informations sur les commandes.
-      --------------------------------------
-      votre commande devrait etre de forme [bash scriptShell.sh votrefichier.csv -traitement]" ;;
-      *-h*) echo ;;
+      cut -d';' -f5,6 "$1" | sort -u | awk -F';' '{drivers[$2]+=$1} END {for (driver in drivers) print drivers[driver], ";", driver}'| sort -n -r | head -10 > demo/tempNB.txt # tout comme le premier traitement on prends les colonnes qui nous interessent ( 5 les km et 6 les conducteurs ). Ensuite on supprime les lignes en double et on fait la somme des km pour chacun des conducteurs. La fonction awk viens de CHATGPT. Ensuite on trie numériquement et on inverse pour enfin garder seulement les 10 premiers conducteurs que l'on met dans un fichier temporaire.
+      echo "traitement d2 effectué";;
+      *-l*) make traitementL
+      echo "l";;
+      *-t*) make traitementT
+      echo "t";;
+      *-s*) make traitementS
+      echo "s";;
+      *-h*) aide ;;
       *) echo "traitement non valable";; # par default
       esac;;
+  *-h*) aide ;;
   *)
   echo "veuillez mettre le csv en premier argument"
   # si le premier argument n'est pas dans le bon format

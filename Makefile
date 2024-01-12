@@ -14,11 +14,14 @@ main: $(SRCS) $(HEADERS)
 	$(CC) -o "$@" $(SRCS)	$(CFLAGS)
 
 
-traitementL:
+traitementL: progc/traitementL.c progc/traitementL.h
+	$(CC) -o temp/exeL progc/traitementL.c $(CFLAGS)
 
-traitementT:
-
-traitementS:
-
+traitementT: progc/traitementT.c progc/traitementT.h
+	$(CC) -o temp/exeT progc/traitementT.c $(CFLAGS)
+	
+traitementS: progc/traitementS.c progc/traitementS.h
+	$(CC) -o temp/exeS progc/traitementS.c $(CFLAGS)
+	
 clean:
-	rm -f main main-debug
+	rm -rf temp

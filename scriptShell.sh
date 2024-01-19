@@ -37,13 +37,14 @@ case $1 in # switch avec les differentes commandes
   *.csv)
     case $2 in # trie en fonction du plus routes parcouru.
       *-d1*) 
-      cut -d';' -f1,6 "$1" | sort -u | cut -d';' -f2 | sort | uniq -c | sort -n -r | head -10 > demo/tempNB.txt # cette ligne prends l'id trajet et le nom des conducteurs [cut] pour les trier une premiere fois. 
+      time cut -d';' -f1,6 "$1" | sort -u | cut -d';' -f2 | sort | uniq -c | sort -n -r | head -10 > demo/tempNB.txt # cette ligne prends l'id trajet et le nom des conducteurs [cut] pour les trier une premiere fois. 
       #[sort -u] et ce tout en supprimant les lignes en double afin de ne pas compter deux fois les conducteurs ayant fais le meme trajet.
       #ensuite on prends seulement la colonne des conducteurs [cut] et on les retrie [sort]
       #[uniq -c] permet de compter le nombre de repetetition, on trie du plus grand au plus petit [sort] puis on envoie les 10 premieres lignes [head] dans un fichier temporaire nommée tempNB.txt
       echo "traitement d1 effectué";;
       *-d2*) 
-      cut -d';' -f5,6 "$1" | sort -u | awk -F';' '{drivers[$2]+=$1} END {for (driver in drivers) print drivers[driver], ";", driver}'| sort -n -r | head -10 > demo/tempNB.txt # tout comme le premier traitement on prends les colonnes qui nous interessent ( 5 les km et 6 les conducteurs ). Ensuite on supprime les lignes en double et on fait la somme des km pour chacun des conducteurs. La fonction awk viens de CHATGPT. Ensuite on trie numériquement et on inverse pour enfin garder seulement les 10 premiers conducteurs que l'on met dans un fichier temporaire.
+      time cut -d';' -f5,6 "$1" | sort -t';' -k2,2 | awk -F';' '{drivers[$2]+=$1} END {for (driver in drivers) print drivers[driver], ";", driver}' | sort -n -r | head -10 > demo/tempNB1.txt
+ # tout comme le premier traitement on prends les colonnes qui nous interessent ( 5 les km et 6 les conducteurs ). Ensuite on supprime les lignes en double et on fait la somme des km pour chacun des conducteurs. La fonction awk viens de CHATGPT. Ensuite on trie numériquement et on inverse pour enfin garder seulement les 10 premiers conducteurs que l'on met dans un fichier temporaire.
       echo "traitement d2 effectué";;
       *-l*) make traitementL
       echo "l";;
@@ -67,7 +68,6 @@ echo "
 echo " temps de traitement : NULL"
 
 #compile et lance main.c ( sans arguments, a modifier si possible)
-gcc -o temp/exe progc/main.c
-./temp/exe
+make clean
 #rm -r temp // a rajt qd on ferra les images
 

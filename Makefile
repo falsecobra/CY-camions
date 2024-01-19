@@ -15,13 +15,13 @@ main: $(SRCS) $(HEADERS)
 
 
 traitementL: progc/traitementL.c progc/traitementL.h
-	$(CC) -o temp/exeL progc/traitementL.c $(CFLAGS)
+	$(CC) -o temp/exeL progc/traitementL.c progc/traitementL.h $(CFLAGS)
 
 traitementT: progc/traitementT.c progc/traitementT.h
-	$(CC) -o temp/exeT progc/traitementT.c $(CFLAGS)
+	$(CC) -o temp/exeT progc/traitementT.c progc/traitementT.h $(CFLAGS)
 	
 traitementS: progc/traitementS.c progc/traitementS.h
-	$(CC) -o temp/exeS progc/traitementS.c $(CFLAGS)
+	$(CC) -o temp/exeS progc/traitementS.c progc/traitementS.h $(CFLAGS)
 	
 clean:
 	rm -rf temp

@@ -1,0 +1,3 @@
+mettre les chaines d echar a 46
+fonction dynamiter avl
+debug :(

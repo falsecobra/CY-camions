@@ -392,7 +392,7 @@ int main(int argc, char *argv[]){
   time(&debut);//démarre le chrono
   char villeinit[45]={"KAAAAAAAAAAA"};
   avl* av= creerarbre(villeinit);
-  
+  int candy=0;
   
   char ligne[300];
   char stepid[100];//colonne n°1
@@ -412,7 +412,10 @@ int main(int argc, char *argv[]){
     //if( strcmp ( andi , villeb )==0){
       //comptandi+=1;
     //}
-    
+    char andi[45] = {"ANDILLY"};
+    if ( strcmp ( villeb , andi )==0){
+      candy+=1;
+    }
     av= insertion(av,villeb,h,listept,m);//on ajoute toutes les villes de fin d'étape 
     
     
@@ -421,13 +424,13 @@ int main(int argc, char *argv[]){
       colonnecut (2,villea,ligne); 
       //avl* trouve=NULL;
       if (recherche(av, villea,&trouve)){// la ville existe deja donc on augmente nb depart
-        trouve->nbdepart+=1;
+        //trouve->nbdepart+=1;
       }
       else{
-      av= insertion(av,villea,h,listept,m);//on ajoute  la ville puis on la retrouve : on met son nbdepart à 1 et nbvis à 0;
-      recherche(av, villea,&trouve);
-        trouve->nbdepart=1;
-        trouve->nbvis=0;
+      //av= insertion(av,villea,h,listept,m);//on ajoute  la ville puis on la retrouve : on met son nbdepart à 1 et nbvis à 0;
+      //recherche(av, villea,&trouve);
+        //trouve->nbdepart=1;
+        //trouve->nbvis=0;
     }}
   }
 
@@ -441,6 +444,7 @@ int main(int argc, char *argv[]){
   char retour [10][45];
  tript(listept,retour);
   affichestr(retour);
+  printf("\nandy = %d\n\n",candy);
   //printf("%d\n" ,comptandi);
 
   time (&fin);//éteint le chrono

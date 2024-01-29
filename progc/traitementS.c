@@ -40,13 +40,7 @@ void triFusion(int i, int j, avl* tab[50], avl* tmp[50]) {//tab  estcelui a trie
     }
 }
 
-
-
-
-
-
-void colonnemauvais (int n,char colonne[100],char ligne[300])//équivalent de la commande cut mais en c, n represente le numero de la colonne 0 est la 1ere colonne
-{
+void colonnemauvais (int n,char colonne[100],char ligne[300]){
   for (int i =0;i<100;i++){//vide "colonne"
       colonne[i]='\0';
   }
@@ -69,7 +63,7 @@ void colonnemauvais (int n,char colonne[100],char ligne[300])//équivalent de la
 
   }
   return;
-}
+}//équivalent de la commande cut mais en c, n represente le numero de la colonne 0 est la 1ere colonne
 
 void indiceminpt(avl* liste[50],float*m){//met la valeur de dif du pt avec l'attribut dif le plus bas dans m
   // IMPORTANT NE PAS UTILISER AVEC UNE LISTE PARTIELLEMENT REMPLIE
@@ -150,7 +144,6 @@ void colonnecutf(int n,float* pt,char ligne[300]){//comme colonnecutul mais pour
   *pt=essai;
 
 }
-
 
 
  //les fonctions avl du td un peu modifiées :
@@ -275,8 +268,6 @@ int recherche(avl *a, unsigned long int nb) { // renvoie 1 si nb existe dans l'a
     }
   }
 }
-
-
 
 avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],float distance,float* m) {
   if (a == NULL) {

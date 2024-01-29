@@ -41,11 +41,6 @@ void triFusion(int i, int j, avl* tab[10], avl* tmp[10]) {//tab  estcelui a trie
     }
 }
 
-
-
-
-
-
 void colonnemauvais (int n,char colonne[100],char ligne[300])//équivalent de la commande cut mais en c, n represente le numero de la colonne 0 est la 1ere colonne
 {
   for (int i =0;i<100;i++){//vide "colonne"
@@ -271,8 +266,6 @@ int recherche(avl *a, unsigned long int nb) { // renvoie 1 si nb existe dans l'a
   }
 }
 
-
-
 avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],long double distance,long double * m) {
   if (a == NULL) {
     *h = 1;
@@ -387,7 +380,7 @@ unsigned long int cligne =1;
 }
 
 
-
+  pirntf andily
 
   affichept(listept2);
   triFusion (0,9,listept,listept2);

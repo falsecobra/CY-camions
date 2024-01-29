@@ -1,52 +1,78 @@
 #!/bash/bin
 #verifie + crée si non existant les fichiers temp et image
+function err {
+	return 1
+}
 
 function erreur {
 	if [ $? -ne 0 ]; then
-	echo "Erreur code retour : "
+	echo "Erreur code retour : 1"
 	exit 1
 	else
-	echo "ok"
+	echo "... reussie"
 	fi
 }
 
 function aide {
-  echo "/!\ PAS DE TRAITEMENT /!\ [AIDE] :
+echo "
+- - - - - - [AIDE] - - - - - - -"
+  echo "
   Ce programmme permet de faire différent traitement sur votre base de donnée. Le premier argument doit être un fichier csv et le deuxième un des différents traitements disponible : "
   echo "-d2 : conducteurs avec le plus de trajets."
   echo "-d1 : conducteurs et la plus grande distance."
   echo "-l :les 10 trajets les plus long."
   echo "-t : les 10 villes les plus traversées."
   echo "-s : statistiques sur les étapes."
-  echo "-h : aide et informations sur les commandes."
-  echo "--------------------------------------"
-  echo "votre commande devrait etre de forme [bash scriptShell.sh votrefichier.csv -traitement]"
+  echo "-h : aide et informations sur les commandes.
+  "
+  echo "--------------------------------------
+  "
+  echo "votre commande devrait etre de forme [bash scriptShell.sh votrefichier.csv -traitement]
+  "
 }
 
-function verif {
+
+		
+
+
+# le main
+
+echo "
+- - - - - - Mise en place - - - - - - -
+"
+
+mkdir -v temp #création des fichiers temp et image
+mkdir -v image
+TIMEFORMAT=%R #permet de garder seulement la valeurs réel lorqu'on utilise "time"
 	case $# in
-	1)
-	case $1 in
-	*-h*)
-	echo "h"
-	aide
-	return 1;;
-	*)
-	echo "veuillez mettre le csv en premier argument vroum"
-	return 1;;
-	esac;;
-	*)
-	if [[ $# -ge 3 ]]; then
-	  echo "seul les deux premiers arguments ( lien vers le fichier et le traitement sont pris en compte )"
-	  return 1
-	fi
-	echo "test"
-	return 0;;
+		1)
+		case $1 in
+			*-h*)
+			aide
+			err
+			erreur;;
+			*)
+			echo "faire [-h] pour plus d'information"
+			err
+			erreur;;
+		esac;;
+		2)
+		case $2 in
+			*-h)
+			aide
+			err
+			erreur;;
+		esac;;
+		*)
+		if [[ $# -ge 3 ]]; then
+		  echo "seul les deux premiers arguments ( lien vers le fichier et le traitement sont pris en compte )"
+		fi;;
 	esac
-}
+echo "
+- - - - - - Choix du traitement - - - - - -
+"
 
-function traitements {
-		case $1 in # switch avec les differentes commandes
+case $1 in # switch avec les differentes commandes
 	  *.csv)
 	    		case $2 in # trie en fonction du plus routes parcouru.
 	      *-d1*) 
@@ -77,32 +103,13 @@ function traitements {
 	      *-h*) aide ;;
 	      *) echo "traitement non valable";; # par default
 	      esac;;
-	  *-h*) aide ;;
 	  *) 
 	  echo "veuillez mettre le csv en premier argument"
 	  # si le premier argument n'est pas dans le bon format
-	  return 1;;
+	  err
+	  erreur;;
 	esac
-}
 
-# le main
-
-echo "
-- - - - - - Mise en place - - - - - - -
-"
-
-mkdir -v temp #création des fichiers temp et image
-mkdir -v image
-TIMEFORMAT=%R #permet de garder seulement la valeurs réel lorqu'on utilise "time"
-verif
-erreur
-echo "
-- - - - - - Choix du traitement - - - - - -
-"
-
-traitements
-
-erreur
 
 echo "
 - - - - - - Fin de programme - - - - - -
@@ -112,3 +119,4 @@ cat temp/temps.txt
 #compile et lance main.c ( sans arguments, a modifier si possible)
 make clean
 #rm -r temp // a rajt qd on ferra les images
+

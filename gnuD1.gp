@@ -36,4 +36,4 @@ set lmargin 5
 
 
 # Charge les données depuis le fichier texte
-plot 'temp/tempNB.txt' using 1:xticlabels(2) notitle
+plot 'temp/resD1.txt' using 1:xticlabels(2) notitle

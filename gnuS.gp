@@ -1,6 +1,6 @@
 # Configuration du terminal de sortie (par exemple, PNG)
 set terminal pngcairo size 1400,1000
-set output 'image/imgS.png'
+set output 'temp/graphique_min_max_moyenne.png'
 
 # Utilisation de ';' comme délimiteur
 set datafile separator ";"
@@ -16,11 +16,11 @@ moyenne_color = "#004e02"
 
 # Tri des données par la colonne 6 (distance_maxi - distance_mini) par ordre décroissant
 stats 'temp/amodifier.txt' using (column(5)-column(4)) nooutput
-sortfile = 'donnees_traitees_sorted.txt'
-system(sprintf("sort -t';' -k6,6nr %s -o %s", 'demo/tempS.txt', sortfile))
+sortfile = 'temp/donnees_traitees_sorted.txt'
+system(sprintf("sort -t';' -k6,6nr %s -o %s", 'temp/resultatS.txt', sortfile))
 
 # Tracer la zone entre min et max avec remplissage
-plot sortfile using 1:($5-$6):($5+$6) with filledcurves fill solid border lc rgb '#C499F3  notitle, \
+plot sortfile using 1:($5-$6):($5+$6) with filledcurves fill solid border lc rgb min_max_color notitle, \
      '' using 1:5 with lines lc rgb moyenne_color title 'Moyenne', \
      '' using 1:5:6 with yerrorbars title 'Min-Max' lc rgb min_max_color
 

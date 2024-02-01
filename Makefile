@@ -15,13 +15,21 @@ main: $(SRCS) $(HEADERS)
 
 
 traitementL: progc/traitementL.c progc/traitementL.h
-	$(CC) -o temp/exeL progc/traitementL.c progc/traitementL.h $(CFLAGS)
+	@echo "compilation en cours..."
+	@$(CC) -o temp/exeL progc/traitementL.c progc/traitementL.h $(CFLAGS)
+	@echo "compilation terminée."
 
 traitementT: progc/traitementT.c progc/traitementT.h
-	$(CC) -o temp/exeT progc/traitementT.c progc/traitementT.h $(CFLAGS)
+	@echo "compilation en cours..."
+	@$(CC) -o temp/exeT progc/traitementT.c progc/traitementT.h $(CFLAGS)
+	@echo "compilation terminée."
 	
 traitementS: progc/traitementS.c progc/traitementS.h
-	$(CC) -o temp/exeS progc/traitementS.c progc/traitementS.h $(CFLAGS)
-	
+	@echo "compilation en cours..."
+	@$(CC) -o temp/exeS progc/traitementS.c progc/traitementS.h $(CFLAGS)
+	@echo "compilation terminée."
+
 clean:
-	rm -rf temp
+	@echo "Suppression des éléments temporaires..."
+	@rm -rf temp
+	@echo "Suppression terminée."

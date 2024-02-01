@@ -1,4 +1,5 @@
 #!/bash/bin
+export LC_NUMERIC="en_US.UTF-8" # flottants
 function err {  # permet d'utiliser erreur
 	return 1
 }
@@ -39,9 +40,10 @@ echo "
 echo "
 - - - - - - Mise en place - - - - - - -
 "
-
+cp $1 data/data.csv #copie le csv envoyé dans data/
 mkdir -v temp #création des fichiers temp et image
 mkdir -v image
+touch progc/amodifier.txt # pour le fonctionnement des programmes en c
 TIMEFORMAT=%R #permet de garder seulement la valeurs réel lorqu'on utilise "time"
 	case $# in #sécurise le code si il y a pas assez d'arguments ou trop. Permet aussi de rentrer dans la fonction -h
 		1)
@@ -79,9 +81,8 @@ case $1 in # switch avec les differentes commandes
 	    		case $2 in # trie en fonction du plus routes parcouru.
 	      *-d1*) 
 	      echo "temps de traitement en seconde :"
-	      time cut -d';' -f1,6 "$1" | sort -S 50% -u | cut -d';' -f2 | sort -S 50% | uniq -c | sort -S 50% -n -r | head -10 > temp/tempD1.txt
-	      sed -i 's/\([0-9]\) \([A-Za-z]\)/\1;\2/g' temp/tempD1.txt 
-	      sed 's/;/ ; /g' temp/tempD1.txt > temp/tempNB.txt
+	      time cut -d';' -f1,6 "$1" | sort -S 50% -u | cut -d';' -f2 | sort -S 50% | uniq -c | sort -S 50% -n -r | head -10 > temp/resD1.txt
+	      sed -i 's/\([0-9]\) \([A-Za-z]\)/\1;\2/g' temp/resD1.txt 
 	      gnuplot gnuD1.gp
 	      convert -rotate 90 image/imgD1.png image/imgD1.png
 	      xdg-open image/imgD1.png
@@ -93,7 +94,7 @@ case $1 in # switch avec les differentes commandes
 	      echo "
 traitement d1 effectué";;
 	      *-d2*) 
-	      time cut -d';' -f5,6 "$1" | awk -F';' '{conducteurs[$2]+=$1} END {for (km in conducteurs) print conducteurs[km], ";", km}' | sort -S 50% -n -r | head -10 > temp/tempD2.txt
+	      time cut -d';' -f5,6 "$1" | awk -F';' '{conducteurs[$2]+=$1} END {for (km in conducteurs) print conducteurs[km], ";", km}' | sort -S 50% -n -r | head -10 > temp/resD2.txt
 	      gnuplot gnuD2.gp
 	      convert -rotate 90 image/imgD2.png image/imgD2.png
 	      xdg-open image/imgD2.png
@@ -102,22 +103,27 @@ traitement d1 effectué";;
 	      echo "
 traitement d2 effectué";;
 	      *-l*) make traitementL
-	      ./temp/exeL $1 progc/amodifier.csv
-	      mv progc/amodifier.csv temp/
+	      ./temp/exeL $1 progc/amodifier.txt
+	      mv progc/amodifier.txt temp/
 	      gnuplot gnuL.gp
 	      xdg-open image/imgL.png
-	      echo "l";;
+	      mv temp/amodifier.txt temp/resL.txt
+	      echo "Traitement l effectué";;
 	      *-t*) make traitementT
-	      ./temp/exeT $1 progc/amodifier.csv
+	      ./temp/exeT $1 progc/amodifier.txt
 	      mv progc/amodifier.txt temp/
-	      echo "t";;
+	      gnuplot gnuT.gp
+	      xdg-open image/imgT.png
+	      mv temp/amodifier.txt temp/resT.txt
+	      echo "Traitement t effectué";;
 	      *-s*) make traitementS
-	      ./temp/exeS $1 progc/amodifier.csv
+	      ./temp/exeS $1 progc/amodifier.txt
 	      mv progc/amodifier.txt temp/
 	      chmod +x gnuS.gp
 	      gnuplot gnuS.gp
-
-	      echo "s";;
+	      xdg-open image/imgS.png
+	      mv temp/amodifier.txt temp/resS.txt
+	      echo "Traitement s effectué";;
 	      *-h*) aide ;;
 	      *) echo "traitement non valable";; # par default
 	      esac;;
@@ -134,7 +140,6 @@ echo "
 "
 
 #compile et lance main.c ( sans arguments, a modifier si possible)
-mv temp/amodifier.txt progc/
-make clean
+#make clean
 #rm -r temp // a rajt qd on ferra les images
 

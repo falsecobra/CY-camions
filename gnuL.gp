@@ -16,7 +16,7 @@ set style histogram cluster gap 1
 set yrange[0:*]
 
 #mise en page
-set xtics rotate by -270
+
 
 # Spécifie les titres des axes
 set xlabel "Route ID"

@@ -20,4 +20,4 @@ set bmargin 5
 set lmargin 9
 
 # Charge les données depuis le fichier texte
-plot 'demo/tempT.txt' using 2:xticlabels(1) title "Nombre de Trajets", '' using 3 title "Premiere ville"
+plot 'demo/amodifier.txt' using 2:xticlabels(1) title "Nombre de Trajets", '' using 3 title "Premiere ville"

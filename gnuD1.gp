@@ -3,7 +3,7 @@ reset
 
 set datafile separator";"
 # Spécifie le format de sortie et le nom du fichier
-set terminal pngcairo size 1600,1000 enhanced font 'Verdana,12'
+set terminal pngcairo size 1000,1400 enhanced font 'Verdana,12'
 set output 'image/imgD1.png'
 
 # Spécifie le style de l'histogramme horizontal
@@ -19,7 +19,7 @@ set style histogram cluster gap 1
 set yrange [0:*]
 set ytics mirror
 set xtics rotate by -270
-set ytics rotate by -270 offset 156
+set ytics rotate by -270 offset 95
 
 # Spécifie les titres des axes
 set xlabel "Nom Conduteur"
@@ -36,4 +36,4 @@ set lmargin 5
 
 
 # Charge les données depuis le fichier texte
-plot 'demo/tempNB.txt' using 1:xticlabels(2) notitle
+plot 'temp/tempNB.txt' using 1:xticlabels(2) notitle

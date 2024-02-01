@@ -79,9 +79,9 @@ case $1 in # switch avec les differentes commandes
 	    		case $2 in # trie en fonction du plus routes parcouru.
 	      *-d1*) 
 	      echo "temps de traitement en seconde :"
-	      time cut -d';' -f1,6 "$1" | sort -S 50% -u | cut -d';' -f2 | sort -S 50% | uniq -c | sort -S 50% -n -r | head -10 > demo/tempD1.txt
-	      sed -i 's/\([0-9]\) \([A-Za-z]\)/\1;\2/g' demo/tempD1.txt 
-	      sed 's/;/ ; /g' demo/tempD1.txt > demo/tempNB.txt
+	      time cut -d';' -f1,6 "$1" | sort -S 50% -u | cut -d';' -f2 | sort -S 50% | uniq -c | sort -S 50% -n -r | head -10 > temp/tempD1.txt
+	      sed -i 's/\([0-9]\) \([A-Za-z]\)/\1;\2/g' temp/tempD1.txt 
+	      sed 's/;/ ; /g' temp/tempD1.txt > temp/tempNB.txt
 	      gnuplot gnuD1.gp
 	      convert -rotate 90 image/imgD1.png image/imgD1.png
 	      xdg-open image/imgD1.png
@@ -93,14 +93,19 @@ case $1 in # switch avec les differentes commandes
 	      echo "
 traitement d1 effectué";;
 	      *-d2*) 
-	      time cut -d';' -f5,6 "$1" | awk -F';' '{conducteurs[$2]+=$1} END {for (km in conducteurs) print conducteurs[km], ";", km}' | sort -S 50% -n -r | head -10 > demo/tempNB1.txt
+	      time cut -d';' -f5,6 "$1" | awk -F';' '{conducteurs[$2]+=$1} END {for (km in conducteurs) print conducteurs[km], ";", km}' | sort -S 50% -n -r | head -10 > temp/tempD2.txt
+	      gnuplot gnuD2.gp
+	      convert -rotate 90 image/imgD2.png image/imgD2.png
+	      xdg-open image/imgD2.png
 	 # tout comme le premier traitement on prends les colonnes qui nous interessent ( 5 les km et 6 les conducteurs ). La fonction awk viens d'un forum CommentçaMarche datant de 2014. Ensuite on trie numériquement et on inverse pour enfin garder seulement les 10 premiers conducteurs que l'on met dans un fichier temporaire.
 
 	      echo "
 traitement d2 effectué";;
 	      *-l*) make traitementL
 	      ./temp/exeL $1 progc/amodifier.csv
-	      mv progc/amodifier.txt temp/
+	      mv progc/amodifier.csv temp/
+	      gnuplot gnuL.gp
+	      xdg-open image/imgL.png
 	      echo "l";;
 	      *-t*) make traitementT
 	      ./temp/exeT $1 progc/amodifier.csv
@@ -129,7 +134,7 @@ echo "
 "
 
 #compile et lance main.c ( sans arguments, a modifier si possible)
-#mv temp/amodifier.txt progc/
+mv temp/amodifier.txt progc/
 make clean
 #rm -r temp // a rajt qd on ferra les images
 

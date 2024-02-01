@@ -31,4 +31,4 @@ set lmargin 9
 
 
 # Charge les données depuis le fichier texte
-plot 'demo/tempL.txt' using 2:xticlabels(1) notitle
+plot 'temp/amodifier.txt' using 2:xticlabels(1) notitle

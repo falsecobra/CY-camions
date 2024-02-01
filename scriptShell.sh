@@ -1,10 +1,9 @@
 #!/bash/bin
-#verifie + crée si non existant les fichiers temp et image
-function err {
+function err {  # permet d'utiliser erreur
 	return 1
 }
 
-function erreur {
+function erreur { #verifie si erreur
 	if [ $? -ne 0 ]; then
 	echo "Erreur code retour : 1"
 	exit 1
@@ -13,13 +12,13 @@ function erreur {
 	fi
 }
 
-function aide {
+function aide { 
 echo "
 - - - - - - [AIDE] - - - - - - -"
   echo "
   Ce programmme permet de faire différent traitement sur votre base de donnée. Le premier argument doit être un fichier csv et le deuxième un des différents traitements disponible : "
-  echo "-d2 : conducteurs avec le plus de trajets."
   echo "-d1 : conducteurs et la plus grande distance."
+  echo "-d2 : conducteurs avec le plus de trajets."
   echo "-l :les 10 trajets les plus long."
   echo "-t : les 10 villes les plus traversées."
   echo "-s : statistiques sur les étapes."
@@ -27,7 +26,7 @@ echo "
   "
   echo "--------------------------------------
   "
-  echo "votre commande devrait etre de forme [bash scriptShell.sh votrefichier.csv -traitement]
+  echo "votre commande devra etre de forme [bash scriptShell.sh votrefichier.csv -traitement]
   "
 }
 
@@ -44,7 +43,7 @@ echo "
 mkdir -v temp #création des fichiers temp et image
 mkdir -v image
 TIMEFORMAT=%R #permet de garder seulement la valeurs réel lorqu'on utilise "time"
-	case $# in
+	case $# in #sécurise le code si il y a pas assez d'arguments ou trop. Permet aussi de rentrer dans la fonction -h
 		1)
 		case $1 in
 			*-h*)
@@ -52,7 +51,10 @@ TIMEFORMAT=%R #permet de garder seulement la valeurs réel lorqu'on utilise "tim
 			err
 			erreur;;
 			*)
-			echo "faire [-h] pour plus d'information"
+			echo "
+Vous devez mettre plus d'un argument.
+faire [-h] pour plus d'information
+"
 			err
 			erreur;;
 		esac;;
@@ -77,28 +79,39 @@ case $1 in # switch avec les differentes commandes
 	    		case $2 in # trie en fonction du plus routes parcouru.
 	      *-d1*) 
 	      echo "temps de traitement en seconde :"
-	      time cut -d';' -f1,6 "$1" | sort -S 50% -u | cut -d';' -f2 | sort -S 50% | uniq -c | sort -S 50% -n -r | head -10 > demo/tempNB.txt
-	      sed -i 's/\([0-9]\) \([A-Za-z]\)/\1;\2/g' demo/tempNB.txt
+	      time cut -d';' -f1,6 "$1" | sort -S 50% -u | cut -d';' -f2 | sort -S 50% | uniq -c | sort -S 50% -n -r | head -10 > demo/tempD1.txt
+	      sed -i 's/\([0-9]\) \([A-Za-z]\)/\1;\2/g' demo/tempD1.txt 
+	      sed 's/;/ ; /g' demo/tempD1.txt > demo/tempNB.txt
+	      gnuplot gnuD1.gp
+	      convert -rotate 90 image/imgD1.png image/imgD1.png
+	      xdg-open image/imgD1.png
+	      # chat gtp ! permet de délimiter les conducteurs avec les trajet
 	       # cette ligne prends l'id trajet et le nom des conducteurs [cut] pour les trier une premiere fois. 
 	      #[sort -u] et ce tout en supprimant les lignes en double afin de ne pas compter deux fois les conducteurs ayant fais le meme trajet.
 	      #ensuite on prends seulement la colonne des conducteurs [cut] et on les retrie [sort]
 	      #[uniq -c] permet de compter le nombre de repetetition, on trie du plus grand au plus petit [sort] puis on envoie les 10 premieres lignes [head] dans un fichier temporaire nommée tempNB.txt
 	      echo "
-	      traitement d1 effectué";;
+traitement d1 effectué";;
 	      *-d2*) 
-	      time cut -d';' -f5,6 "$1" | sort -S 50% -t';' -k2,2 | awk -F';' '{drivers[$2]+=$1} END {for (driver in drivers) print drivers[driver], ";", driver}' | sort -S 50% -n -r | head -10 > demo/tempNB1.txt
-	 # tout comme le premier traitement on prends les colonnes qui nous interessent ( 5 les km et 6 les conducteurs ). Ensuite on supprime les lignes en double et on fait la somme des km pour chacun des conducteurs. La fonction awk viens de CHATGPT. Ensuite on trie numériquement et on inverse pour enfin garder seulement les 10 premiers conducteurs que l'on met dans un fichier temporaire.
+	      time cut -d';' -f5,6 "$1" | awk -F';' '{conducteurs[$2]+=$1} END {for (km in conducteurs) print conducteurs[km], ";", km}' | sort -S 50% -n -r | head -10 > demo/tempNB1.txt
+	 # tout comme le premier traitement on prends les colonnes qui nous interessent ( 5 les km et 6 les conducteurs ). La fonction awk viens d'un forum CommentçaMarche datant de 2014. Ensuite on trie numériquement et on inverse pour enfin garder seulement les 10 premiers conducteurs que l'on met dans un fichier temporaire.
 
 	      echo "
-	      traitement d2 effectué";;
+traitement d2 effectué";;
 	      *-l*) make traitementL
 	      ./temp/exeL $1 progc/amodifier.csv
+	      mv progc/amodifier.txt temp/
 	      echo "l";;
 	      *-t*) make traitementT
 	      ./temp/exeT $1 progc/amodifier.csv
+	      mv progc/amodifier.txt temp/
 	      echo "t";;
 	      *-s*) make traitementS
 	      ./temp/exeS $1 progc/amodifier.csv
+	      mv progc/amodifier.txt temp/
+	      chmod +x gnuS.gp
+	      gnuplot gnuS.gp
+
 	      echo "s";;
 	      *-h*) aide ;;
 	      *) echo "traitement non valable";; # par default
@@ -114,9 +127,9 @@ case $1 in # switch avec les differentes commandes
 echo "
 - - - - - - Fin de programme - - - - - -
 "
-cat temp/temps.txt
 
 #compile et lance main.c ( sans arguments, a modifier si possible)
+#mv temp/amodifier.txt progc/
 make clean
 #rm -r temp // a rajt qd on ferra les images
 

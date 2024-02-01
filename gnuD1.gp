@@ -22,10 +22,12 @@ set xtics rotate by -270
 set ytics rotate by -270 offset 156
 
 # Spécifie les titres des axes
-set xlabel "Nom Conduteur
+set xlabel "Nom Conduteur"
 set ylabel offset 5,0
-
+set xlabel offset 0,1
 set ylabel "Option -d1"
+set y2label "Trajets"
+set y2label offset 3,0
 
 # Spécifie les marges
 set bmargin 10

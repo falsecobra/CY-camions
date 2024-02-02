@@ -160,7 +160,7 @@ int max(int liste[]) {
   return maxi;
 }
 
-void tript(avl*liste[10],char chmodif[10][45]){//renvoie la liste triée par ordre alphabétique avec un algorithme très suboptimal mais pour 10 elements ça ira
+void tript(avl*liste[10]){//renvoie la liste triée par ordre alphabétique avec un algorithme très suboptimal mais pour 10 elements ça ira
   
   
   
@@ -185,9 +185,9 @@ void tript(avl*liste[10],char chmodif[10][45]){//renvoie la liste triée par ord
     
   }
   
-  for (int z=0; z<10;z++){
+  /*for (int z=0; z<10;z++){
   strcpy(chmodif[z],liste[z]->vil);
-  }
+  }*/
   
 
   
@@ -342,11 +342,23 @@ avl *insertion(avl *a, char v[45], int *h,avl*liste[10],int*m) {
   return a;
 }
 
-void affichept(avl* liste[10]){//fonction d'aide spectatrice
-  printf("\nListe des pointeurs :\n");
+void dynamiter(avl* arbre){
+  if (arbre==NULL){
+    return;
+  }
+  avl* copied = arbre->fd;
+  avl* copieg = arbre->fg;
+  free(arbre);
+  dynamiter(copied);
+  dynamiter(copieg);
+  return;
+
+}
+
+void affichept(avl* liste[10],FILE*fichier){//fonction d'aide spectatrice
   for (int i=0; i<10; i++){
     if (liste[i]!=NULL){
-    printf("%s %d %d\n",liste[i]->vil,liste[i]->nbvis ,liste[i]->nbdepart);}
+    fprintf(fichier,"%s;%d;%d\n",liste[i]->vil,liste[i]->nbvis ,liste[i]->nbdepart);}
   }     
 }
 
@@ -393,6 +405,9 @@ int main(int argc, char *argv[]){
   char villeinit[45]={"KAAAAAAAAAAA"};
   avl* av= creerarbre(villeinit);
   int candy=0;
+  int cmar=0;
+  int cc=0;
+  int clen=0;
   
   char ligne[300];
   char stepid[100];//colonne n°1
@@ -412,40 +427,60 @@ int main(int argc, char *argv[]){
     //if( strcmp ( andi , villeb )==0){
       //comptandi+=1;
     //}
+    colonnecut (2,villea,ligne); 
+    if ( strcmp ( villea ,villeb )!=0){
     char andi[45] = {"ANDILLY"};
-    if ( strcmp ( villeb , andi )==0){
+    if ( strcmp ( villea , andi )==0){
       candy+=1;
+    }
+    char mar[45] = {"MARSEILLE"};
+    if ( strcmp ( villea , mar )==0){
+      cmar+=1;
+    }
+    char marc[45] = {"STE COLOMBE"};
+    if ( strcmp ( villea , marc )==0){
+      if (strlen(villeb)!=strlen(marc)){
+        clen+=1;
+      }
+      
+      cc+=1;
     }
     av= insertion(av,villeb,h,listept,m);//on ajoute toutes les villes de fin d'étape 
     
     
     if ((stepid[0]=='1')&&(stepid[1]=='\0')) {//cas step id =1
       
-      colonnecut (2,villea,ligne); 
-      //avl* trouve=NULL;
       if (recherche(av, villea,&trouve)){// la ville existe deja donc on augmente nb depart
-        //trouve->nbdepart+=1;
+        trouve->nbdepart+=1;
       }
       else{
-      //av= insertion(av,villea,h,listept,m);//on ajoute  la ville puis on la retrouve : on met son nbdepart à 1 et nbvis à 0;
-      //recherche(av, villea,&trouve);
-        //trouve->nbdepart=1;
-        //trouve->nbvis=0;
+      av= insertion(av,villea,h,listept,m);//on ajoute  la ville puis on la retrouve : on met son nbdepart à 1 et nbvis à 0;
+      recherche(av, villea,&trouve);
+        trouve->nbdepart=1;
+        trouve->nbvis=0;
     }}
-  }
+  }}
 
   
   
 
-  affichept(listept);
+
 
 
   
-  char retour [10][45];
- tript(listept,retour);
-  affichestr(retour);
-  printf("\nandy = %d\n\n",candy);
+  tript(listept);
+
+  affichept(listept,modif);
+  /*printf("\nandy = %d\n\n",candy);
+  printf("\nmar = %d\n\n",cmar);
+  printf("\nste colombes = %d\n\n",cc);
+  printf("\nlen = %d\n\n",clen);*/
   //printf("%d\n" ,comptandi);
+
+  dynamiter(av);
+
+fclose(data);
+fclose(modif);
 
   time (&fin);//éteint le chrono
     printf("\nTraitement T effectué en %f secondes !\n",difftime(fin,debut));

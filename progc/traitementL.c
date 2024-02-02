@@ -28,7 +28,7 @@ void triFusion(int i, int j, avl* tab[10], avl* tmp[10]) {//tab  estcelui a trie
         }else if (pd == j + 1) { //le pointeur du sous-tableau de droite a atteint la limite
             tmp[c] = tab[pg];
             pg++;
-        }else if (tab[pg]->val < tab[pd]->val) { //le pointeur du sous-tableau de gauche pointe vers un élément plus petit
+        }else if (tab[pg]->val > tab[pd]->val) { //le pointeur du sous-tableau de gauche pointe vers un élément plus petit
             tmp[c] = tab[pg];
             pg++;
         }else {  //le pointeur du sous-tableau de droite pointe vers un élément plus petit
@@ -74,7 +74,7 @@ void indiceminpt(avl* liste[10],long double*m){//met la valeur de dif du pt avec
   for (int i = 1; i < 10; i++) {
 
 
-    if (liste[i]->distance< *m) {
+    if (liste[i]->distance < *m) {
       *m = liste[i]->distance;
     }
   }  
@@ -266,16 +266,16 @@ int recherche(avl *a, unsigned long int nb) { // renvoie 1 si nb existe dans l'a
   }
 }
 
-avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],long double distance,long double * m) {
+avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],long double distancin,long double * m) {
   if (a == NULL) {
     *h = 1;
-    avl * apr=creerarbre(nb,distance);
+    avl * apr=creerarbre(nb,distancin);
     if (apr->distance>*m){
       remplacept(liste,apr,m);
     }
     return apr;
   } else if (a->val == nb) {//le trajet est d'ores et déjà dans l'arbre
-    a->distance=(a->distance)+(distance);//actualise la distance
+    a->distance=(a->distance)+(distancin);//actualise la distance
     
     if (a->distance>*m){
       remplacept(liste,a,m);
@@ -284,13 +284,13 @@ avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],long double di
     *h = 0;
     return a;
   } else if (a->val > nb) {
-    a->fg = insertion(a->fg, nb, h,liste,distance,m);
+    a->fg = insertion(a->fg, nb, h,liste,distancin,m);
     *h = -*h;
   }
 
   else if (a->val < nb) {
 
-    a->fd = insertion(a->fd, nb, h,liste,distance,m);
+    a->fd = insertion(a->fd, nb, h,liste,distancin,m);
   }
   if (*h != 0) {
     a->equi += *h;
@@ -305,12 +305,24 @@ avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],long double di
   return a;
 }
 
-void affichept(avl* liste[10]){//fonction d'aide spectatrice
-  printf("\nListe des pointeurs :\n");
+void affichept(avl* liste[10],FILE* fichier){//fonction d'aide spectatrice
   for (int i=0; i<10; i++){
     if (liste[i]!=NULL){
-    printf("%lu %Lf \n",liste[i]->val,liste[i]->distance);}
+    fprintf(fichier,"%lu;%Lf\n",liste[i]->val,liste[i]->distance);}
   }     
+}
+
+void dynamiter(avl* arbre){
+  if (arbre==NULL){
+    return;
+  }
+  avl* copied = arbre->fd;
+  avl* copieg = arbre->fg;
+  free(arbre);
+  dynamiter(copied);
+  dynamiter(copieg);
+  return;
+  
 }
 
 
@@ -370,6 +382,8 @@ unsigned long int cligne =1;
   while (fgets(ligne, 300, data)!=NULL){//parcours tout le fichier
     cligne+=1;
     if (strlen(ligne)>10){//comparaison arbitraire qui evite un bug
+      lupt=0;
+      fpt=0;
     colonnecutul (0,&lupt,ligne);//ne prend que le numero de trajet
     colonnecutf (4,&fpt,ligne);//prend la distance
 
@@ -380,20 +394,23 @@ unsigned long int cligne =1;
 }
 
 
-  pirntf andily
+ 
 
-  affichept(listept2);
+  //affichept(listept2,modif);
   triFusion (0,9,listept,listept2);
-  printf("\n");
-  affichept(listept);
-  printf("%Lf",*m);
 
+  affichept(listept,modif);
 
+  
+dynamiter(av);
+  
+  
+ 
 
-
-
+fclose(data);
+fclose(modif);
 
   time (&fin);//éteint le chrono
-    printf("\nTraitement S effectué en %f secondes !\n",difftime(fin,debut));
+    printf("\nTraitement L effectué en %f secondes !\n",difftime(fin,debut));
   return 0;
 }

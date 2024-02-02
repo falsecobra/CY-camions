@@ -49,6 +49,8 @@ avl *equilibrer(avl *a);
 
 int recherche(avl *a, unsigned long int nb);
 
-avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[10],long double distance,long double * m);
+avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[10],long double distancin,long double * m);
 
-void affichept(avl* liste[10]);
+void affichept(avl* liste[10],FILE * fichier);
+
+void dynamiter(avl* arbre);

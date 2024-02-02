@@ -53,4 +53,7 @@ int recherche(avl *a, unsigned long int nb);
 
 avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],float distance,float* m);
 
-void affichept(avl* liste[50]);
+void affichept(avl* liste[50],FILE * fichier);
+
+void dynamiter(avl* arbre);
+

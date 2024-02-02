@@ -1,5 +1,6 @@
 #!/usr/bin/gnuplot
 reset
+#ce gnu est modifié et adapté de chatgtp
 
 set datafile separator";"
 # Spécifie le format de sortie et le nom du fichier
@@ -36,4 +37,4 @@ set lmargin 5
 
 
 # Charge les données depuis le fichier texte
-plot 'temp/resD2.txt' using 1:xticlabels(2) notitle
+plot 'temp/resD2.txt' using 1:xticlabels(2) notitle lc rgb '#d7ccc8'

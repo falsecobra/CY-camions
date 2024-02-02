@@ -315,11 +315,23 @@ avl *insertion(avl *a, unsigned long int nb, int *h,avl*liste[50],float distance
   return a;
 }
 
-void affichept(avl* liste[50]){//fonction d'aide spectatrice
-  printf("\nListe des pointeurs :\n");
+void dynamiter(avl* arbre){
+  if (arbre==NULL){
+    return;
+  }
+  avl* copied = arbre->fd;
+  avl* copieg = arbre->fg;
+  free(arbre);
+  dynamiter(copied);
+  dynamiter(copieg);
+  return;
+
+}
+
+void affichept(avl* liste[50],FILE* fichier){//fonction d'aide spectatrice
   for (int i=0; i<50; i++){
     if (liste[i]!=NULL){
-    printf("%lu %f %f %f %f\n",liste[i]->val,liste[i]->distancemax ,liste[i]->distancemin,liste[i]->distancemoy,liste[i]->dif);}
+    fprintf(fichier,"%d ; %lu ; %f ; %f ; %f ; %f\n",i,liste[i]->val,liste[i]->distancemin ,liste[i]->distancemoy,liste[i]->distancemax,liste[i]->dif);}
   }     
 }
 
@@ -400,17 +412,16 @@ unsigned long int cligne =1;
 
 
 
-  affichept(listept);
   triFusion (0,49,listept,listept2);
-  printf("\n");
-  affichept(listept);
-  printf("%f",*m);
+
+  affichept(listept,modif);
 
 
+  dynamiter(av);
 
-  
-
-  
+fclose(data);
+fclose(modif);  
+	
   time (&fin);//éteint le chrono
     printf("\nTraitement S effectué en %f secondes !\n",difftime(fin,debut));
   return 0;

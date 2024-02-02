@@ -22,7 +22,7 @@ int min(int liste[]) ;
 
 void indiceminpt(avl* liste[10],int*m);
 void minpt (avl* liste[10],avl* a);
-
+void tript(avl*liste[10]);
 
 int max(int liste[]) ;
 
@@ -43,5 +43,9 @@ avl *equilibrer(avl *a) ;
 
 avl *insertion(avl *a, char v[45], int *h,avl* liste[10],int*m) ;
 
-void affichept(avl* liste[10]);
+void affichept(avl* liste[10],FILE* fichier);
+
+void dynamiter(avl* arbre);
+
+void affichestr(char liste[10][45]);
 

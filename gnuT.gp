@@ -1,5 +1,5 @@
 reset
-
+#ce gnu est modifié et adapté de chatgtp
 # Spécifie le terminal de sortie et le nom du fichier
 set terminal pngcairo size 1400,1000 enhanced font 'Verdana,12'
 set output 'image/imgT.png'
@@ -20,4 +20,4 @@ set bmargin 5
 set lmargin 9
 
 # Charge les données depuis le fichier texte
-plot 'temp/amodifier.txt' using 2:xticlabels(1) title "Nombre de Trajets", '' using 3 title "Premiere ville"
+plot 'temp/amodifier.txt' using 2:xticlabels(1) title "Nombre de Trajets"lc rgb '#d7ccc8 ', '' using 3 title "Premiere ville"lc rgb '#795548'

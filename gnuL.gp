@@ -1,5 +1,6 @@
 #!/usr/bin/gnuplot
 reset
+#ce gnu est modifié et adapté de chatgtp
 
 set datafile separator";"
 # Spécifie le format de sortie et le nom du fichier
@@ -31,4 +32,4 @@ set lmargin 9
 
 
 # Charge les données depuis le fichier texte
-plot 'temp/amodifier.txt' using 2:xticlabels(1) notitle
+plot 'temp/amodifier.txt' using 2:xticlabels(1) notitle lc rgb '#d7ccc8'

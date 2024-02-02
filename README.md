@@ -1,8 +1,8 @@
----------------------------présentation--------------------------------- 
+------------------------------------------------------------présentation------------------------------------------------------------------ 
 Ce programme est un outil qui permet d'analyser et de résumer les données d'entrée dans
 un fichier volumineux. Ce fichier contient pleins de données concernant une société
 nationale de transport routier.
----------------------------utilisation----------------------------------
+------------------------------------------------------------utilisation-------------------------------------------------------------------
 une fois dans le fichier où se trouve le programme, afin de l'exécuter il va falloir l'appeler ( dans le terminal ) sous la forme :
 
 bash scriptShell.sh [cheminvers/fichier .csv] [traitement]

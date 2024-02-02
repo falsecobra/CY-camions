@@ -130,7 +130,9 @@ traitement d2 effectué";;
 	      xdg-open image/imgL.png
 	      mv temp/amodifier.txt temp/resL.txt #renommme le fichier amodifier pour mieux retrouver les resultats.
 	      echo "Traitement l effectué";;
-	      *-t*) make traitementT #compile, execute, transmet a gnuplot puis ouvre l'image
+	      *-t*) 
+	      echo "Le traitement t prend un certain temps, il faut compter 20 secondes..."
+	      make traitementT #compile, execute, transmet a gnuplot puis ouvre l'image
 	      ./temp/exeT $1 progc/amodifier.txt
 	      mv progc/amodifier.txt temp/
 	      gnuplot gnuT.gp
